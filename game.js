@@ -15,23 +15,6 @@ class Game {
     constructor() {
     }
 
-    #getRandomPosition(notCrossedPositions = []) {
-        let newX;
-        let newY;
-
-        do {
-            // Генерируем случайные координаты
-            newX = NumberUtil.getRandomNumber(0, this.#settings.gridSize.columnsCount - 1);
-            newY = NumberUtil.getRandomNumber(0, this.#settings.gridSize.rowsCount - 1);
-        }
-            // Генерируем координаты пока они равны хотя бы одной позиции массиваы notCrossedPositions
-        while (
-            notCrossedPositions.some(p => newX === p.x && newY === p.y)
-            );
-
-        return new Position(newX, newY);
-    }
-
     get settings() {
         return this.#settings;
     }
@@ -52,23 +35,26 @@ class Game {
         return this.#status
     }
 
-    #createPlayers() {
+    #createUnits() {
         const player1Position = new Position(
             NumberUtil.getRandomNumber(0, this.#settings.gridSize.columnsCount - 1),
             NumberUtil.getRandomNumber(0, this.#settings.gridSize.rowsCount - 1)
         )
+
         this.#player1 = new Player(player1Position);
 
-        const player2Position = this.#getRandomPosition([player1Position]);
+        const player2Position = Position.getRandomPosition(this.#settings.gridSize,[player1Position]);
+
         this.#player2 = new Player(player2Position);
 
-        const googlePosition = this.#getRandomPosition([player1Position, player2Position])
+        const googlePosition = Position.getRandomPosition(this.#settings.gridSize, [player1Position, player2Position]);
+
         this.#google = new Google(googlePosition);
     }
 
     async start() {
         if (this.#status === 'pending') {
-            this.#createPlayers();
+            this.#createUnits();
             this.#status = 'in-progress';
         }
     }
@@ -94,9 +80,26 @@ class Position {
         this.x = x;
         this.y = y;
     }
+
+    static getRandomPosition(gridSize, notCrossedPositions = []) {
+        let newX;
+        let newY;
+
+        do {
+            // Генерируем случайные координаты
+            newX = NumberUtil.getRandomNumber(0, gridSize.columnsCount - 1);
+            newY = NumberUtil.getRandomNumber(0, gridSize.rowsCount - 1);
+        }
+            // Генерируем координаты пока они равны хотя бы одной позиции массива notCrossedPositions
+        while (
+            notCrossedPositions.some(p => newX === p.x && newY === p.y)
+            );
+
+        return new Position(newX, newY);
+    }
 }
 
-class Unit  {
+class Unit {
     constructor(position) {
         this.position = position;
     }
@@ -117,4 +120,3 @@ class Google extends Unit {
 module.exports = {
     Game
 }
-
