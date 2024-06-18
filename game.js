@@ -1,6 +1,7 @@
-const {NumberUtil, GameStatuses} = require("./utils");
+import {GameStatuses, NumberUtil} from "./utils/utils.js";
+import {EventEmitter} from "./utils/observer/event-emitter.js";
 
-class Game {
+export class Game {
     // Настройки игры по умолчанию
     #settings = {
         // Количество очков для выйгрыша
@@ -25,7 +26,10 @@ class Game {
     #google;
     #googleJumpInterval;
 
-    constructor() {
+    eventEmitter;
+
+    constructor(eventEmitter) {
+        this.eventEmitter = eventEmitter;
     }
 
     get settings() {
@@ -117,6 +121,8 @@ class Game {
         const googlePosition = this.#getRandomPosition(notCrossedPositions);
 
         this.#google.position = googlePosition;
+
+        this.eventEmitter.emit('change');
     }
 
     get players() {
@@ -139,12 +145,12 @@ class Game {
         if (delta.y) newPosition.y += delta.y;
 
         if (newPosition.x < 0 ||
-            newPosition.x > this.#settings.gridSize.columnsCount) {
+            newPosition.x >= this.#settings.gridSize.columnsCount) {
             return false;
         }
 
         if (newPosition.y < 0 ||
-            newPosition.y > this.#settings.gridSize.rowsCount) {
+            newPosition.y >= this.#settings.gridSize.rowsCount) {
             return false;
         }
 
@@ -198,6 +204,8 @@ class Game {
         }
 
         this.#checkGoogleCatching(player);
+
+        this.eventEmitter.emit('change');
     }
 
     movePlayer1Right() {
@@ -302,8 +310,4 @@ class Google extends Unit {
     constructor(position) {
         super(position);
     }
-}
-
-module.exports = {
-    Game
 }

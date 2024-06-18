@@ -1,6 +1,7 @@
-const {Game} = require("./game");
-const {GameStatuses} = require("./utils.js");
+import {GameStatuses} from "../utils/utils.js";
+import {Game} from "../game.js";
 
+// Тесты для проверки логики игры до добавления eventEmitter
 describe("game tests", () => {
     let game;
 
@@ -135,8 +136,13 @@ describe("game tests", () => {
 
             const prevGooglePosition = game.google.position.clone();
 
+            // Проверка кто из игроков дальше от гугла
             if (Math.abs(deltaForPlayer1) === 2) {
+                // 1-й игрок дальше от гугла => движется 2-й игрок
+
+                // Дельта для определения стороны движения
                 const deltaForPlayer2 = game.google.position.x - game.players[1].position.x;
+
                 if (deltaForPlayer2 > 0) {
                     game.movePlayer2Right()
                 } else {
@@ -146,6 +152,7 @@ describe("game tests", () => {
                 expect(game.score[1].points).toBe(0);
                 expect(game.score[2].points).toBe(1);
             } else {
+                // 2-й игрок дальше от гугла => движется 1-й игрок
                 if (deltaForPlayer1 > 0) {
                     game.movePlayer1Right()
                 } else {
@@ -203,7 +210,6 @@ describe("game tests", () => {
                 expect(game.score[2].points).toBe(0);
             }
 
-            // Проверка смены позиции гугла после его поимки игроком
             expect(game.google.position.equals(prevGooglePosition)).toBe(false);
 
             game.stop()
