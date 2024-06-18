@@ -1,5 +1,4 @@
 import {GameStatuses, NumberUtil} from "./utils/utils.js";
-import {EventEmitter} from "./utils/observer/event-emitter.js";
 
 export class Game {
     // Настройки игры по умолчанию
