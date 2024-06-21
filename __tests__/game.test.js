@@ -1,4 +1,4 @@
-import {GameStatuses} from "../utils/utils.js";
+import {GameStatuses} from "../utils/utils-const.js";
 import {Game} from "../game.js";
 
 // Тесты для проверки логики игры до добавления eventEmitter

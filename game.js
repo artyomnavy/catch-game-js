@@ -1,4 +1,5 @@
-import {GameStatuses, NumberUtil} from "./utils/utils.js";
+import {GameStatuses} from "./utils/utils-const.js";
+import {NumberUtil} from "./utils/random-number.js";
 
 export class Game {
     // Настройки игры по умолчанию
@@ -84,9 +85,9 @@ export class Game {
         if (this.#status === GameStatuses.PENDING) {
             this.#createUnits();
             this.#status = GameStatuses.IN_PROGRESS;
-        }
 
-        this.#runGoogleJumpInterval();
+            this.#runGoogleJumpInterval();
+        }
     }
 
     #runGoogleJumpInterval() {

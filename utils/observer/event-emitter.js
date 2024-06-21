@@ -1,6 +1,6 @@
 export class EventEmitter {
     #subscribers = {
-
+        // eventName: [callback, callback, callback]
     }
 
     addEventListener(eventName, observer) {
